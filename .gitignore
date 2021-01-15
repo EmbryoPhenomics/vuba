@@ -31,4 +31,6 @@ dist
 # Egg metadata
 *.egg-info
 
+# pycache
+__pycache__
 
