@@ -1,6 +1,6 @@
-# Vuba 
+# vuba 
 
-Vuba is an easy to use library for constructing [`OpenCV`](https://opencv.org/) HighGUI interfaces. 
+**vuba** (formerly **cvu**) is an easy to use library for constructing [`OpenCV`](https://opencv.org/) HighGUI interfaces. 
 
 * **Documentation**: 
 * **Example scripts**:
@@ -16,7 +16,7 @@ Currently the library is split up into three modules:
 * [**imio**](https://github.com/EmbryoPhenomics/vuba/blob/main/vuba/imio.py) - Image readers and writers for handling various image formats. Note that regardless of format, the handlers share the same API.
 * [**ops**](https://github.com/EmbryoPhenomics/vuba/blob/main/vuba/ops.py)- Image operations, from simple drawing functions to contour filters and mask constructors.
 
-This library is still in active development and so we welcome feedback on any aspect of **Vuba**.
+This library is still in active development and so we welcome feedback on any aspect of **vuba**.
 
 
 
