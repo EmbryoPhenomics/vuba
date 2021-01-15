@@ -26,10 +26,10 @@ def get_version(rel_path):
 setup(
     name="vuba",
     version=get_version("vuba/__init__.py"),
-    description="Computer vision utilities.",
+    description="An easy to use library for constructing OpenCV HighGUI interfaces.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/EmbryoPhenomics/cvu",
+    url="https://github.com/EmbryoPhenomics/vuba",
     author="Ziad Ibbini",
     author_email="ziad.ibbini@students.plymouth.ac.uk",
     license="MIT",
@@ -43,5 +43,5 @@ setup(
         "dataclasses",
         "natsort",
     ],
-    project_urls={"Source": "https://github.com/EmbryoPhenomics/cvu/tree/main/cvu"},
+    project_urls={"Source": "https://github.com/EmbryoPhenomics/vuba/tree/main/vuba"},
 )
