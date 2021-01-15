@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>vuba.io &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../interface-framework.html">Vuba’s interface framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-interfaces.html">Creating basic interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-io.html">Image IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-ops.html">Image operations</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>vuba.io</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vuba.io</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">more_itertools</span> <span class="kn">import</span> <span class="n">prepend</span>
+<span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span><span class="p">,</span> <span class="n">ns</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">vuba</span> <span class="kn">import</span> <span class="n">ops</span>
+
+
+<div class="viewcode-block" id="take_first"><a class="viewcode-back" href="../../generated/vuba.take_first.html#vuba.take_first">[docs]</a><span class="k">def</span> <span class="nf">take_first</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve the first value from an iterable object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    it : iterable</span>
+<span class="sd">        Iterable object to retrieve the first value from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    first : number or string or ndarray or None</span>
+<span class="sd">        First value from the iterable object. Will be</span>
+<span class="sd">        None if ``StopIteration`` is raised.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="fourcc_to_string"><a class="viewcode-back" href="../../generated/vuba.fourcc_to_string.html#vuba.fourcc_to_string">[docs]</a><span class="k">def</span> <span class="nf">fourcc_to_string</span><span class="p">(</span><span class="n">fourcc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert fourcc integer code into codec string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fourcc : int</span>
+<span class="sd">        Fourcc integer code.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    codec : str</span>
+<span class="sd">        Codec string corresponding to fourcc code.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">char1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">fourcc</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">))</span>
+    <span class="n">char2</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="n">fourcc</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">))</span>
+    <span class="n">char3</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="n">fourcc</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">))</span>
+    <span class="n">char4</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="n">fourcc</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">char1</span> <span class="o">+</span> <span class="n">char2</span> <span class="o">+</span> <span class="n">char3</span> <span class="o">+</span> <span class="n">char4</span></div>
+
+
+<div class="viewcode-block" id="open_video"><a class="viewcode-back" href="../../generated/vuba.open_video.html#vuba.open_video">[docs]</a><span class="k">def</span> <span class="nf">open_video</span><span class="p">(</span><span class="n">video</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for creating a ``Video`` instance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    video : str or cv2.VideoCapture or list.</span>
+<span class="sd">        Full filename or VideoCapture object to a video (e.g. AVI or MP4),</span>
+<span class="sd">        or a glob string or series of filenames to a series of individual</span>
+<span class="sd">        images.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    video : Video</span>
+<span class="sd">        Instance of ``Video``.</span>
+<span class="sd">    release : bool</span>
+<span class="sd">        True if footage was not an instance to ``Video``, else False.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">release</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">Video</span><span class="p">):</span>
+        <span class="n">video</span> <span class="o">=</span> <span class="n">Video</span><span class="p">(</span><span class="n">video</span><span class="p">)</span>
+        <span class="n">release</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">video</span><span class="p">,</span> <span class="n">release</span></div>
+
+
+<div class="viewcode-block" id="Frames"><a class="viewcode-back" href="../../generated/vuba.Frames.html#vuba.Frames">[docs]</a><span class="k">class</span> <span class="nc">Frames</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Container for frames that is used in ``Video.read``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reader : callable</span>
+<span class="sd">        Frame reader method supplied from ``Video`` class.</span>
+<span class="sd">    start : int</span>
+<span class="sd">        Index of first frame.</span>
+<span class="sd">    stop : int</span>
+<span class="sd">        Index of last frame.</span>
+<span class="sd">    step : int</span>
+<span class="sd">        Step size.</span>
+<span class="sd">    low_memory : bool</span>
+<span class="sd">        Whether to import frames into memory.</span>
+<span class="sd">    grayscale : bool</span>
+<span class="sd">        Whether to convert frames to grayscale.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    frames : Frames</span>
+<span class="sd">        Container for frames.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Frames are imported into memory at initiation if low_memory=False.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Video</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Frames.__init__"><a class="viewcode-back" href="../../generated/vuba.Frames.html#vuba.Frames.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">low_memory</span><span class="p">,</span> <span class="n">grayscale</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span> <span class="o">=</span> <span class="n">reader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idxs</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grayscale</span> <span class="o">=</span> <span class="n">grayscale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_mem</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_roi</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">low_memory</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">import_to_ndarray</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Frames.import_to_ndarray"><a class="viewcode-back" href="../../generated/vuba.Frames.import_to_ndarray.html#vuba.Frames.import_to_ndarray">[docs]</a>    <span class="k">def</span> <span class="nf">import_to_ndarray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Frames&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Import the declared frames into a contiguous numpy array.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gen_fr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">idxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grayscale</span><span class="p">)</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="n">take_first</span><span class="p">(</span><span class="n">gen_fr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="o">*</span><span class="n">first</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">gen_fr</span> <span class="o">=</span> <span class="n">prepend</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">gen_fr</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Importing frames into memory...&quot;</span><span class="p">)</span>
+        <span class="n">pg</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gen_fr</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[:]</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_mem</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Frames.__len__"><a class="viewcode-back" href="../../generated/vuba.Frames.__len__.html#vuba.Frames.__len__">[docs]</a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Frames&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the length of the provided frames without having to iterate</span>
+<span class="sd">        across them.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        length : int</span>
+<span class="sd">            Length of the provided frames.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idxs</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Frames.__iter__"><a class="viewcode-back" href="../../generated/vuba.Frames.__iter__.html#vuba.Frames.__iter__">[docs]</a>    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Frames&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the frames declared at initiation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        frames : generator</span>
+<span class="sd">            Generator that supplies frames.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_mem</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">frame</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">idxs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grayscale</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">frame</span></div></div>
+
+
+<div class="viewcode-block" id="Video"><a class="viewcode-back" href="../../generated/vuba.Video.html#vuba.Video">[docs]</a><span class="k">class</span> <span class="nc">Video</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper around various image readers that provides a simple API</span>
+<span class="sd">    to achieve the same functions regardless of format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    footage : str or ``cv2.VideoCapture`` or list.</span>
+<span class="sd">        Full filename or VideoCapture object to a video (e.g. AVI or MP4),</span>
+<span class="sd">        or a glob string or series of filenames to a series of individual</span>
+<span class="sd">        images. Note that series of all individual filenames will be sorted</span>
+<span class="sd">        prior to being read if a glob string is supplied.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    video : Video</span>
+<span class="sd">        Video handler for footage supplied.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    open_video</span>
+<span class="sd">    Frames</span>
+<span class="sd">    Writer</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    For example usage of this handler please see example scripts located</span>
+<span class="sd">    at ``examples/reading``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Video.__init__"><a class="viewcode-back" href="../../generated/vuba.Video.html#vuba.Video.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">footage</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">open_videocv</span><span class="p">(</span><span class="n">footage</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video</span> <span class="o">=</span> <span class="n">footage</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video_release</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">video</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">video_release</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">footage</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">footage</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_release</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Somewhat hacky but provides consistent behaviour</span>
+                <span class="k">if</span> <span class="s2">&quot;*&quot;</span> <span class="ow">in</span> <span class="n">footage</span><span class="p">:</span>
+                    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">footage</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="n">natsorted</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">alg</span><span class="o">=</span><span class="n">ns</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">video</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_release</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">open_videocv</span><span class="p">(</span><span class="n">footage</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="n">open_videocv</span><span class="p">(</span><span class="n">footage</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grab_info</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Video.__len__"><a class="viewcode-back" href="../../generated/vuba.Video.__len__.html#vuba.Video.__len__">[docs]</a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Video&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the length of the provided footage without having to iterate</span>
+<span class="sd">        across it.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        length : int</span>
+<span class="sd">            Length of the provided footage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_COUNT</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_grab_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grab summary footage information.</span>
+
+<span class="sd">        This method is called on initiation of ``Video``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
+
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">)</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="nb">map</span><span class="p">(</span><span class="nb">round</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fourcc_code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FOURCC</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">codec</span> <span class="o">=</span> <span class="n">fourcc_to_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fourcc_code</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">first_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">first_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">first_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="nb">map</span><span class="p">(</span><span class="nb">round</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">codec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourcc_code</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Video.read"><a class="viewcode-back" href="../../generated/vuba.Video.read.html#vuba.Video.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Video&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read single or multiple frames from the provided footage.</span>
+
+<span class="sd">        Note that reading multiple frames follows slice behaviour,</span>
+<span class="sd">        whereby there is a &#39;start&#39;, &#39;stop&#39; and &#39;step&#39;. However steps will</span>
+<span class="sd">        only give a performance uplift for reading images stored as</span>
+<span class="sd">        individual files (e.g. multiple pngs). If you are reading from</span>
+<span class="sd">        videos, the read time will be the same as if you were reading</span>
+<span class="sd">        all the frames between &#39;start&#39; and &#39;stop&#39;. This is because it is</span>
+<span class="sd">        faster to pass on frames that don&#39;t match the step size, than it is</span>
+<span class="sd">        to repeatedly locate the correct frames by index in the video file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        * For single frames:</span>
+<span class="sd">            index : int</span>
+<span class="sd">                Index of frame in footage to read.</span>
+<span class="sd">            grayscale : bool</span>
+<span class="sd">                Whether to convert frame to grayscale.</span>
+
+<span class="sd">        * For multiple frames:</span>
+<span class="sd">            start : int</span>
+<span class="sd">                Index of frame to start reading from.</span>
+<span class="sd">            stop : int</span>
+<span class="sd">                Index of frame to stop reading at.</span>
+<span class="sd">            step : int</span>
+<span class="sd">                Step size.</span>
+<span class="sd">            low_memory : bool</span>
+<span class="sd">                Whether to import frames into RAM, default is True i.e. not to.</span>
+<span class="sd">            grayscale</span>
+<span class="sd">                Whether to convert frames to grayscale.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        For single frames:</span>
+<span class="sd">            frame : ndarray</span>
+<span class="sd">                Frame at the given index.</span>
+
+<span class="sd">        For multiple frames:</span>
+<span class="sd">            frames : Frames</span>
+<span class="sd">                Container that will either supply the frames from</span>
+<span class="sd">                an ndarray or from a generator. Note that this</span>
+<span class="sd">                container contains both a len and iter method. For the</span>
+<span class="sd">                latter, a new generator is created upon calling the</span>
+<span class="sd">                method if the frames have not been imported into memory.</span>
+<span class="sd">                This is to maintain implementation parity with the</span>
+<span class="sd">                in-memory container.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the supplied indices are not within the available range of the</span>
+<span class="sd">            selected footage, or if there is a missing required argument.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        For example usage of this method please see example scripts located</span>
+<span class="sd">        at ``examples/reading``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_single</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">frame</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prep_args_kwargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="n">Frames</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_multi</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">frames</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span></div>
+
+    <span class="k">def</span> <span class="nf">_prep_args_kwargs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grayscale</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prep any args and kwargs supplied from Video.read().</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">check_indexes</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                        <span class="s2">&quot;Indices out of available range for provided footage.&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required argument.&quot;</span><span class="p">)</span>
+
+        <span class="n">check_indexes</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">check_indexes</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">low_memory</span><span class="p">,</span> <span class="n">grayscale</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_read_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">grayscale</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read a single frame at a given location in the requested footage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">grayscale</span><span class="p">:</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">frame</span>
+
+    <span class="k">def</span> <span class="nf">_read_multi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">grayscale</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read multiple frames from the requested footage at the given indices.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">step</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="c1"># Floor is used here to stop out-of-range indices being created</span>
+                    <span class="n">number</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="n">step</span><span class="p">)</span>
+                    <span class="n">frames_to_yield</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">((</span><span class="n">step</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">start</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number</span><span class="p">)]</span>
+                    <span class="n">steps</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">steps</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">):</span>
+                <span class="n">success</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">grayscale</span><span class="p">:</span>
+                    <span class="n">frame</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">steps</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">frames_to_yield</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">frame</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">frame</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)]:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">grayscale</span><span class="p">:</span>
+                    <span class="n">frame</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">frame</span>
+
+<div class="viewcode-block" id="Video.close"><a class="viewcode-back" href="../../generated/vuba.Video.close.html#vuba.Video.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Video&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close/teardown attached video handlers.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filenames</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="Writer"><a class="viewcode-back" href="../../generated/vuba.Writer.html#vuba.Writer">[docs]</a><span class="k">class</span> <span class="nc">Writer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create an encoder for exporting frames at a given output.</span>
+
+<span class="sd">    Regardless of input format, this encoder can encode footage to both individual</span>
+<span class="sd">    images and to video files. For encoding to individual images, a sequence of</span>
+<span class="sd">    filenames needs to be supplied that will match the length of the number of frames</span>
+<span class="sd">    that need to be encoded. Conversely, for encoding to a video file, a filename to</span>
+<span class="sd">    the video file needs to be provided.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    output : str or list</span>
+<span class="sd">        Output to export frames.</span>
+<span class="sd">    footage : Video</span>
+<span class="sd">        Instance of Video to create writer based on. If this is</span>
+<span class="sd">        not supplied then you must supply all encoder specific arguments.</span>
+<span class="sd">    fps : float</span>
+<span class="sd">        Framerate to export footage at, default is the fps of</span>
+<span class="sd">        the video supplied. Note that this argument must be supplied</span>
+<span class="sd">        if working with individual images.</span>
+<span class="sd">    resolution : tuple</span>
+<span class="sd">        Width and height to export footage at (both must be supplied</span>
+<span class="sd">        as integers). Default is the resolution of the footage supplied.</span>
+<span class="sd">    codec : str</span>
+<span class="sd">        Codec to encode footage with. Default is to encode with MJPG</span>
+<span class="sd">        codec or that of the Video instance supplied (if any).</span>
+<span class="sd">    grayscale : bool</span>
+<span class="sd">        Whether to export footage as grayscale. Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    encoder : Writer</span>
+<span class="sd">        Encoder to export frames to a given output.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If a frame-rate is not supplied when encoding to a movie using</span>
+<span class="sd">        individual images.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Video</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    For example usage of this handler please see example scripts located</span>
+<span class="sd">    at ``examples/writing``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Writer.__init__"><a class="viewcode-back" href="../../generated/vuba.Writer.html#vuba.Writer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">output</span><span class="p">,</span>
+        <span class="n">footage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">codec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">grayscale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">footage_release</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">footage</span><span class="p">:</span>
+            <span class="n">footage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">footage_release</span> <span class="o">=</span> <span class="n">open_video</span><span class="p">(</span><span class="n">footage</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">grayscale</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resolution</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">footage</span><span class="o">.</span><span class="n">resolution</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder_release</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">codec</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">footage</span><span class="p">:</span>
+                    <span class="n">codec</span> <span class="o">=</span> <span class="n">footage</span><span class="o">.</span><span class="n">codec</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">codec</span> <span class="o">=</span> <span class="s2">&quot;MJPG&quot;</span>
+
+            <span class="n">fourcc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="n">codec</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">footage</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">fps</span><span class="p">:</span>
+                    <span class="n">fps</span> <span class="o">=</span> <span class="n">footage</span><span class="o">.</span><span class="n">fps</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">fps</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;When working with individual images you must supply a frame-rate to export footage at.&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">(</span>
+                <span class="n">output</span><span class="p">,</span> <span class="n">fourcc</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder_release</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourcc</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Writer.write"><a class="viewcode-back" href="../../generated/vuba.Writer.write.html#vuba.Writer.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Writer&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write a frame using the declared encoder.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frame : ndarray</span>
+<span class="sd">            Frame to export.</span>
+
+<span class="sd">        Warns</span>
+<span class="sd">        -----</span>
+<span class="sd">        UserWarning</span>
+<span class="sd">            If the supplied frame is not of the correct resolution or colour space,</span>
+<span class="sd">            and to notify the user that the frame has been correctly converted so</span>
+<span class="sd">            encoding is successful.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        For encoding to video, note that if the frames supplied for encoding are not at</span>
+<span class="sd">        the same resolution as that set for the encoder upon initiation, the frames will</span>
+<span class="sd">        be resized accordingly. Also note that frames will be converted to the colour</span>
+<span class="sd">        space set at initiation if they are not the same. These features are built-in so</span>
+<span class="sd">        that a complete movie is always created, rather than an empty container which</span>
+<span class="sd">        is not of much use for debugging a failed component of a script.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        For example usage of this method please see example scripts located</span>
+<span class="sd">        at ``examples/writing``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">):</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Frame has been resized to ensure successful encoding. Supplied frame vs encoder resolution: </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> , </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channels</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Frame has been grayscaled to ensure successful encoding. Supplied frame vs encoder format: </span><span class="si">{</span><span class="n">channels</span><span class="si">}</span><span class="s2"> , </span><span class="si">{</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">channels</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span><span class="p">:</span>
+                <span class="n">frame</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">bgr</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Frame has been grayscaled to ensure successful encoding. Supplied frame vs encoder format: </span><span class="si">{</span><span class="n">channels</span><span class="si">}</span><span class="s2"> , </span><span class="si">{</span><span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="ne">UserWarning</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">),</span> <span class="n">frame</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Writer.close"><a class="viewcode-back" href="../../generated/vuba.Writer.close.html#vuba.Writer.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Writer&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close/teardown declared encoders.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder_release</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">footage_release</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">footage</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

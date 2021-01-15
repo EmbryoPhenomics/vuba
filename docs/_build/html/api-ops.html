@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Image operations &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="vuba.gray" href="generated/vuba.gray.html" />
+    <link rel="prev" title="vuba.Video.__len__" href="generated/vuba.Video.__len__.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-interfaces.html">Creating basic interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-io.html">Image IO</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Image operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#format-conversion">Format conversion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.gray.html">vuba.gray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.bgr.html">vuba.bgr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.hsv.html">vuba.hsv</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#drawing">Drawing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.draw_contours.html">vuba.draw_contours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.draw_rectangles.html">vuba.draw_rectangles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.draw_circles.html">vuba.draw_circles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mask-constructors">Mask constructors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Mask.html">vuba.Mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.shrink.html">vuba.shrink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.rect_mask.html">vuba.rect_mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.circle_mask.html">vuba.circle_mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.contour_mask.html">vuba.contour_mask</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contour-filters">Contour filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.smallest.html">vuba.smallest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.largest.html">vuba.largest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.parents.html">vuba.parents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Area.html">vuba.Area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Eccentricity.html">vuba.Eccentricity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Solidity.html">vuba.Solidity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-contour-functions">Additional contour functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.find_contours.html">vuba.find_contours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.cast_contours.html">vuba.cast_contours</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Image operations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api-ops.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="image-operations">
+<h1>Image operations<a class="headerlink" href="#image-operations" title="Permalink to this headline">¶</a></h1>
+<p>This section covers the API to the supplied low-level image operations. For more examples and information, refer to the relevant guides in the User Guide.</p>
+<div class="section" id="format-conversion">
+<h2>Format conversion<a class="headerlink" href="#format-conversion" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.gray.html#vuba.gray" title="vuba.gray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gray</span></code></a>(frame)</p></td>
+<td><p>Convert a frame to grayscale.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.bgr.html#vuba.bgr" title="vuba.bgr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bgr</span></code></a>(frame)</p></td>
+<td><p>Convert a frame to BGR format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.hsv.html#vuba.hsv" title="vuba.hsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hsv</span></code></a>(frame)</p></td>
+<td><p>Convert a frame to HSV format.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.draw_contours.html#vuba.draw_contours" title="vuba.draw_contours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_contours</span></code></a>(img, contours, *args, **kwargs)</p></td>
+<td><p>Convenience function for drawing contour(s) on an image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.draw_rectangles.html#vuba.draw_rectangles" title="vuba.draw_rectangles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_rectangles</span></code></a>(img, dims, *args, **kwargs)</p></td>
+<td><p>Convenience function for drawing rectangle(s) on an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.draw_circles.html#vuba.draw_circles" title="vuba.draw_circles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_circles</span></code></a>(img, dims, *args, **kwargs)</p></td>
+<td><p>Convenience function for drawing rectangle(s) on an image.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mask-constructors">
+<h2>Mask constructors<a class="headerlink" href="#mask-constructors" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Mask.html#vuba.Mask" title="vuba.Mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mask</span></code></a>(mask)</p></td>
+<td><p>Convenience class for performing segmentation to a mask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.shrink.html#vuba.shrink" title="vuba.shrink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shrink</span></code></a>(img[, by])</p></td>
+<td><p>Mask an image to a new roi.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.rect_mask.html#vuba.rect_mask" title="vuba.rect_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rect_mask</span></code></a>(img, bbox)</p></td>
+<td><p>Create a rectangular mask at the bounding box dimensions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.circle_mask.html#vuba.circle_mask" title="vuba.circle_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">circle_mask</span></code></a>(img, x, y, r)</p></td>
+<td><p>Create a circular mask at x,y with radius r.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.contour_mask.html#vuba.contour_mask" title="vuba.contour_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">contour_mask</span></code></a>(img, contours)</p></td>
+<td><p>Create a contour mask at the dimensions of contour(s).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="contour-filters">
+<h2>Contour filters<a class="headerlink" href="#contour-filters" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.smallest.html#vuba.smallest" title="vuba.smallest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smallest</span></code></a>(contours)</p></td>
+<td><p>Contour filter that returns the smallest contour by area.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.largest.html#vuba.largest" title="vuba.largest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">largest</span></code></a>(contours)</p></td>
+<td><p>Contour filter that returns the largest contour by area.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.parents.html#vuba.parents" title="vuba.parents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parents</span></code></a>(contours, hierarchy)</p></td>
+<td><p>Contour filter that returns only parent contours.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Area.html#vuba.Area" title="vuba.Area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Area</span></code></a>([min, max])</p></td>
+<td><p>Filter contours by area based on a lower or upper limit, or both.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Eccentricity.html#vuba.Eccentricity" title="vuba.Eccentricity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eccentricity</span></code></a>([min, max])</p></td>
+<td><p>Filter contours by eccentricity based on a lower or upper limit, or both.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Solidity.html#vuba.Solidity" title="vuba.Solidity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solidity</span></code></a>([min, max])</p></td>
+<td><p>Filter contours by solidity based on a lower or upper limit, or both.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="additional-contour-functions">
+<h2>Additional contour functions<a class="headerlink" href="#additional-contour-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.find_contours.html#vuba.find_contours" title="vuba.find_contours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_contours</span></code></a>(img, *args, **kwargs)</p></td>
+<td><p>Convenience function for contour detection.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.cast_contours.html#vuba.cast_contours" title="vuba.cast_contours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cast_contours</span></code></a>(contours, x, y)</p></td>
+<td><p>Convenience function to cast contour(s) to a given x,y.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="generated/vuba.gray.html" class="btn btn-neutral float-right" title="vuba.gray" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="generated/vuba.Video.__len__.html" class="btn btn-neutral float-left" title="vuba.Video.__len__" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

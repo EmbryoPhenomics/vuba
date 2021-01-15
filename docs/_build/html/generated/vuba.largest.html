@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>vuba.largest &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="vuba.parents" href="vuba.parents.html" />
+    <link rel="prev" title="vuba.smallest" href="vuba.smallest.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../basic-interfaces.html">Creating basic interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-io.html">Image IO</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api-ops.html">Image operations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api-ops.html#format-conversion">Format conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-ops.html#drawing">Drawing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api-ops.html#mask-constructors">Mask constructors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api-ops.html#contour-filters">Contour filters</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vuba.smallest.html">vuba.smallest</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">vuba.largest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vuba.parents.html">vuba.parents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vuba.Area.html">vuba.Area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vuba.Eccentricity.html">vuba.Eccentricity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vuba.Solidity.html">vuba.Solidity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api-ops.html#additional-contour-functions">Additional contour functions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api-ops.html">Image operations</a> &raquo;</li>
+        
+      <li>vuba.largest</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/generated/vuba.largest.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vuba-largest">
+<h1>vuba.largest<a class="headerlink" href="#vuba-largest" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="vuba.largest">
+<code class="sig-prename descclassname">vuba.</code><code class="sig-name descname">largest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contours</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vuba/ops.html#largest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vuba.largest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contour filter that returns the largest contour by area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>contours</strong> (<em>list</em><em> or </em><em>ndarray</em>) – Contour(s) to filter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>contour</strong> – Largest contour by area.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="vuba.smallest.html#vuba.smallest" title="vuba.smallest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smallest</span></code></a>, <a class="reference internal" href="vuba.parents.html#vuba.parents" title="vuba.parents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parents</span></code></a>, <a class="reference internal" href="vuba.Area.html#vuba.Area" title="vuba.Area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Area</span></code></a>, <a class="reference internal" href="vuba.Eccentricity.html#vuba.Eccentricity" title="vuba.Eccentricity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eccentricity</span></code></a>, <a class="reference internal" href="vuba.Solidity.html#vuba.Solidity" title="vuba.Solidity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solidity</span></code></a></p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vuba.parents.html" class="btn btn-neutral float-right" title="vuba.parents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vuba.smallest.html" class="btn btn-neutral float-left" title="vuba.smallest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

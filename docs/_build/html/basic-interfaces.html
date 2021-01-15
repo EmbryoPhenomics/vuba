@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Creating basic interfaces &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="more-advanced-interfaces.html" />
+    <link rel="prev" title="Vuba’s interface framework" href="interface-framework.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="interface-framework.html">Vuba’s interface framework</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Creating basic interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-demonstration">Quick demonstration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-io.html">Image IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-ops.html">Image operations</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Creating basic interfaces</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/basic-interfaces.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="creating-basic-interfaces">
+<span id="basic-interfaces"></span><h1>Creating basic interfaces<a class="headerlink" href="#creating-basic-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>Vuba provides a series of OpenCV HighGUI contrustors for easily creating image analysis user interfaces. All of these contructors are based around the base constructor class: <a class="reference internal" href="generated/vuba.BaseGUI.html#vuba.BaseGUI" title="vuba.BaseGUI"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGUI</span></code></a>. This class provides a series of decorators that allow us to code up complex interfaces using simple, declarative code.</p>
+<div class="section" id="quick-demonstration">
+<h2>Quick demonstration<a class="headerlink" href="#quick-demonstration" title="Permalink to this headline">¶</a></h2>
+<p>To demonstrate the ease of use of this module, let’s first code up a simple binary threshold viewer. We will first need grab some footage to work with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vuba</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+<span class="c1"># Create a handler for reading in the video</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">vuba</span><span class="o">.</span><span class="n">Video</span><span class="p">(</span><span class="s2">&quot;../examples/example_data/raw_video/test.avi&quot;</span><span class="p">)</span>
+
+<span class="c1"># Read in the first frame for the viewer</span>
+<span class="n">first</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we have some footage, we can go about creating our user interface. First, we will need to initiate an instance of <a class="reference internal" href="generated/vuba.FrameGUI.html#vuba.FrameGUI" title="vuba.FrameGUI"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrameGUI</span></code></a> since we are working with a single frame:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate an instance of FrameGUI</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">vuba</span><span class="o">.</span><span class="n">FrameGUI</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="s2">&quot;Threshold viewer&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next we need to integrate our image processing into the interface. Since we are only doing a binary threshold here this is relatively simple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@gui</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="n">gui</span><span class="p">):</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># create a copy of the current frame</span>
+    <span class="n">thresh_val</span> <span class="o">=</span> <span class="n">gui</span><span class="p">[</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">]</span>  <span class="c1"># grab the current threshold value</span>
+
+    <span class="c1"># Grayscale the current frame</span>
+    <span class="n">gray</span> <span class="o">=</span> <span class="n">vuba</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="c1"># Threshold the current frame</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">thresh_val</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">thresh</span>
+</pre></div>
+</div>
+<p>Finally, we need to add a trackbar so that we can visualise the effects of varying our binary threshold:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@gui</span><span class="o">.</span><span class="n">trackbar</span><span class="p">(</span><span class="s2">&quot;Threshold&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">on_thresh</span><span class="p">(</span><span class="n">gui</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="n">gui</span><span class="p">[</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gui</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We’re almost done, now all we need to do is run the gui we created:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The output of this code should give you the following gui:</p>
+<ul class="simple">
+<li><p>asset here</p></li>
+</ul>
+<p>This might seem trivial, but in less than 20 lines of code (excluding comments and whitespace) we have created a user interface that enables us to view the output of a variable binary threhsold (for the full script, see …). Note that because all gui constructors use the same base class, we only have to address the video constructor and supply an object that describes a video instead, to apply the interface to a movie:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initiate an instance of VideoGUI</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">vuba</span><span class="o">.</span><span class="n">VideoGUI</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="s2">&quot;Threshold viewer&quot;</span><span class="p">)</span>
+
+<span class="nd">@gui</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="n">gui</span><span class="p">):</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># create a copy of the current frame</span>
+    <span class="n">thresh_val</span> <span class="o">=</span> <span class="n">gui</span><span class="p">[</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">]</span>  <span class="c1"># grab the current threshold value</span>
+
+    <span class="c1"># Grayscale the current frame</span>
+    <span class="n">gray</span> <span class="o">=</span> <span class="n">vuba</span><span class="o">.</span><span class="n">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="c1"># Threshold the current frame</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">thresh_val</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">thresh</span>
+
+<span class="nd">@gui</span><span class="o">.</span><span class="n">trackbar</span><span class="p">(</span><span class="s2">&quot;Threshold&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">on_thresh</span><span class="p">(</span><span class="n">gui</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="n">gui</span><span class="p">[</span><span class="s2">&quot;thresh_val&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gui</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+
+<span class="c1"># And finally execute the gui</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>examples/</p></li>
+<li><p>examples/</p></li>
+<li><p>examples/</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="more-advanced-interfaces.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="interface-framework.html" class="btn btn-neutral float-left" title="Vuba’s interface framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

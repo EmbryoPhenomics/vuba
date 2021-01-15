@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Image IO &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="vuba.Video" href="generated/vuba.Video.html" />
+    <link rel="prev" title="vuba.TrackbarMethod" href="generated/vuba.TrackbarMethod.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-interfaces.html">Creating basic interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Image IO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-handlers">Current handlers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Video.html">vuba.Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Writer.html">vuba.Writer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-and-writing">Reading and writing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Video.read.html">vuba.Video.read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Writer.write.html">vuba.Writer.write</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#teardown-of-handlers">Teardown of handlers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Video.close.html">vuba.Video.close</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Writer.close.html">vuba.Writer.close</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#helper-functions">Helper functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.take_first.html">vuba.take_first</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.fourcc_to_string.html">vuba.fourcc_to_string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.open_video.html">vuba.open_video</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ancillary-classes-methods">Ancillary classes/methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Frames.html">vuba.Frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Frames.import_to_ndarray.html">vuba.Frames.import_to_ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Frames.__len__.html">vuba.Frames.__len__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Frames.__iter__.html">vuba.Frames.__iter__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/vuba.Video.__len__.html">vuba.Video.__len__</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api-ops.html">Image operations</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Image IO</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api-io.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="image-io">
+<h1>Image IO<a class="headerlink" href="#image-io" title="Permalink to this headline">¶</a></h1>
+<p>This section covers the API to the image io handlers. For more examples and information, refer to the relevant guides in the User Guide.</p>
+<div class="section" id="current-handlers">
+<h2>Current handlers<a class="headerlink" href="#current-handlers" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Video.html#vuba.Video" title="vuba.Video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Video</span></code></a>(footage)</p></td>
+<td><p>Wrapper around various image readers that provides a simple API to achieve the same functions regardless of format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Writer.html#vuba.Writer" title="vuba.Writer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Writer</span></code></a>(output[, footage, fps, resolution, …])</p></td>
+<td><p>Create an encoder for exporting frames at a given output.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="reading-and-writing">
+<h2>Reading and writing<a class="headerlink" href="#reading-and-writing" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Video.read.html#vuba.Video.read" title="vuba.Video.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Video.read</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Read single or multiple frames from the provided footage.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Writer.write.html#vuba.Writer.write" title="vuba.Writer.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Writer.write</span></code></a>(frame)</p></td>
+<td><p>Write a frame using the declared encoder.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="teardown-of-handlers">
+<h2>Teardown of handlers<a class="headerlink" href="#teardown-of-handlers" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Video.close.html#vuba.Video.close" title="vuba.Video.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Video.close</span></code></a>()</p></td>
+<td><p>Close/teardown attached video handlers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Writer.close.html#vuba.Writer.close" title="vuba.Writer.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Writer.close</span></code></a>()</p></td>
+<td><p>Close/teardown declared encoders.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="helper-functions">
+<h2>Helper functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.take_first.html#vuba.take_first" title="vuba.take_first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">take_first</span></code></a>(it)</p></td>
+<td><p>Retrieve the first value from an iterable object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.fourcc_to_string.html#vuba.fourcc_to_string" title="vuba.fourcc_to_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourcc_to_string</span></code></a>(fourcc)</p></td>
+<td><p>Convert fourcc integer code into codec string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.open_video.html#vuba.open_video" title="vuba.open_video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_video</span></code></a>(video)</p></td>
+<td><p>Convenience function for creating a <code class="docutils literal notranslate"><span class="pre">Video</span></code> instance.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ancillary-classes-methods">
+<h2>Ancillary classes/methods<a class="headerlink" href="#ancillary-classes-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Frames.html#vuba.Frames" title="vuba.Frames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frames</span></code></a>(reader, start, stop, step, …)</p></td>
+<td><p>Container for frames that is used in <code class="docutils literal notranslate"><span class="pre">Video.read</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Frames.import_to_ndarray.html#vuba.Frames.import_to_ndarray" title="vuba.Frames.import_to_ndarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frames.import_to_ndarray</span></code></a>()</p></td>
+<td><p>Import the declared frames into a contiguous numpy array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Frames.__len__.html#vuba.Frames.__len__" title="vuba.Frames.__len__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frames.__len__</span></code></a>()</p></td>
+<td><p>Retrieve the length of the provided frames without having to iterate across them.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/vuba.Frames.__iter__.html#vuba.Frames.__iter__" title="vuba.Frames.__iter__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frames.__iter__</span></code></a>()</p></td>
+<td><p>Retrieve the frames declared at initiation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/vuba.Video.__len__.html#vuba.Video.__len__" title="vuba.Video.__len__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Video.__len__</span></code></a>()</p></td>
+<td><p>Retrieve the length of the provided footage without having to iterate across it.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="generated/vuba.Video.html" class="btn btn-neutral float-right" title="vuba.Video" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="generated/vuba.TrackbarMethod.html" class="btn btn-neutral float-left" title="vuba.TrackbarMethod" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1031 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>vuba.ops &mdash; vuba 0.1.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> vuba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../why-vuba.html">Why vuba?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../interface-framework.html">Vuba’s interface framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../basic-interfaces.html">Creating basic interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reading-images.html">Reading images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../writing-images.html">Writing images</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mask.html">Creating masks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contour-operations.html">Contour filters</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api-gui.html">HighGUI constructors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-io.html">Image IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api-ops.html">Image operations</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">vuba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>vuba.ops</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for vuba.ops</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">cv_vers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">__version__</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">type_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for raising an exception if the input image is not</span>
+<span class="sd">    of the correct format.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exc_info</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;grayscale&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;BGR&quot;</span><span class="p">}</span>
+
+    <span class="n">channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">channels</span> <span class="o">!=</span> <span class="n">type_</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Input image needs to be </span><span class="si">{</span><span class="n">exc_info</span><span class="p">[</span><span class="n">type_</span><span class="p">]</span><span class="si">}</span><span class="s2"> or have </span><span class="si">{</span><span class="n">type_</span><span class="si">}</span><span class="s2"> channels, instead an image with </span><span class="si">{</span><span class="n">channels</span><span class="si">}</span><span class="s2"> was provided.&quot;</span>
+        <span class="p">)</span>
+
+
+<div class="viewcode-block" id="find_contours"><a class="viewcode-back" href="../../generated/vuba.find_contours.html#vuba.find_contours">[docs]</a><span class="k">def</span> <span class="nf">find_contours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for contour detection.</span>
+
+<span class="sd">    This function accounts for the OpenCV version supplied and executes</span>
+<span class="sd">    accordingly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Grayscale image to perform contour detection on.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional arguments `cv2.findContours` will require.</span>
+<span class="sd">    *kwargs : tuple</span>
+<span class="sd">        Additional keyword arguments `cv2.findContours` will require.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    contours : ndarray</span>
+<span class="sd">        An array of contours detected.</span>
+<span class="sd">    hierarchy : ndarray</span>
+<span class="sd">        Corresponding hierarchy information to the contours detected.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale or has greater than 2 channels.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    For some examples of this function please see the following scripts in</span>
+<span class="sd">    ``examples/image_operations``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cv_vers</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span></div>
+
+
+<div class="viewcode-block" id="draw_contours"><a class="viewcode-back" href="../../generated/vuba.draw_contours.html#vuba.draw_contours">[docs]</a><span class="k">def</span> <span class="nf">draw_contours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for drawing contour(s) on an image.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Image to draw contours on.</span>
+<span class="sd">    contours : ndarray or list</span>
+<span class="sd">        Contour(s) to draw on the supplied image.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional arguments `cv2.drawContours` will require.</span>
+<span class="sd">    *kwargs : tuple</span>
+<span class="sd">        Additional keyword arguments `cv2.drawContours` will require.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    draw_rectangles</span>
+<span class="sd">    draw_circles</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Please see the following scripts for example use cases of this function:</span>
+
+<span class="sd">    * ``examples/image_operations/drawing.py``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contours</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">[</span><span class="n">contours</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="draw_rectangles"><a class="viewcode-back" href="../../generated/vuba.draw_rectangles.html#vuba.draw_rectangles">[docs]</a><span class="k">def</span> <span class="nf">draw_rectangles</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for drawing rectangle(s) on an image.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Image to draw contours on.</span>
+<span class="sd">    dims : tuple or list</span>
+<span class="sd">        Rectangle(s) to draw on the supplied image. Note these should be</span>
+<span class="sd">        supplied in (x,y,w,h) format.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional arguments `cv2.rectangle` will require.</span>
+<span class="sd">    *kwargs : tuple</span>
+<span class="sd">        Additional keyword arguments `cv2.rectangle` will require.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    draw_contours</span>
+<span class="sd">    draw_circles</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">r</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">dims</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">h</span><span class="p">),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="draw_circles"><a class="viewcode-back" href="../../generated/vuba.draw_circles.html#vuba.draw_circles">[docs]</a><span class="k">def</span> <span class="nf">draw_circles</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function for drawing rectangle(s) on an image.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Image to draw contours on.</span>
+<span class="sd">    dims : tuple or list</span>
+<span class="sd">        Circle(s) to draw on the supplied image. Note these should be</span>
+<span class="sd">        supplied in (x,y,r) format.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional arguments `cv2.rectangle` will require.</span>
+<span class="sd">    *kwargs : tuple</span>
+<span class="sd">        Additional keyword arguments `cv2.rectangle` will require.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    draw_contours</span>
+<span class="sd">    draw_rectangles</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">c</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">dims</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gray"><a class="viewcode-back" href="../../generated/vuba.gray.html#vuba.gray">[docs]</a><span class="k">def</span> <span class="nf">gray</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a frame to grayscale.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Frame to grayscale.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Grayscale frame.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not of BGR format.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    bgr</span>
+<span class="sd">    hsv</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="bgr"><a class="viewcode-back" href="../../generated/vuba.bgr.html#vuba.bgr">[docs]</a><span class="k">def</span> <span class="nf">bgr</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a frame to BGR format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Frame to convert.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Frame of BGR format.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    gray</span>
+<span class="sd">    hsv</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_GRAY2BGR</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="hsv"><a class="viewcode-back" href="../../generated/vuba.hsv.html#vuba.hsv">[docs]</a><span class="k">def</span> <span class="nf">hsv</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a frame to HSV format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Frame to convert.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    frame : ndarray</span>
+<span class="sd">        Frame of HSV format.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not of BGR format.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    gray</span>
+<span class="sd">    bgr</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HSV</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Mask"><a class="viewcode-back" href="../../generated/vuba.Mask.html#vuba.Mask">[docs]</a><span class="k">class</span> <span class="nc">Mask</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience class for performing segmentation to a mask.</span>
+
+<span class="sd">    ``Mask`` enables the creation of a callable that will perform</span>
+<span class="sd">    ``bitwise_and`` on a given frame with the mask supplied at initiation.</span>
+<span class="sd">    This can be useful for performing the same operation on a series of frames.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mask : ndarray</span>
+<span class="sd">        Mask to segment frame(s) to.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mask : Mask</span>
+<span class="sd">        Class object with ``__call__`` method that performs ``bitwise_and``</span>
+<span class="sd">        with the the mask provided at initiation.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    shrink</span>
+<span class="sd">    rect_mask</span>
+<span class="sd">    circle_mask</span>
+<span class="sd">    contour_mask</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Mask.__init__"><a class="viewcode-back" href="../../generated/vuba.Mask.html#vuba.Mask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+        <span class="n">_channel_check</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Mask&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mask a frame using the pre-defined mask.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        frame : ndarray.</span>
+<span class="sd">            Frame to mask.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        masked_frame : ndarray</span>
+<span class="sd">            Masked frame.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the supplied image is not grayscale.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_channel_check</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cast_contours"><a class="viewcode-back" href="../../generated/vuba.cast_contours.html#vuba.cast_contours">[docs]</a><span class="k">def</span> <span class="nf">cast_contours</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience function to cast contour(s) to a given x,y.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contours : list or ndarray</span>
+<span class="sd">        Contour(s) to cast.</span>
+<span class="sd">    x : int</span>
+<span class="sd">        x position to cast to.</span>
+<span class="sd">    y : int</span>
+<span class="sd">        y position to cast to.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    contours : list of ndarray</span>
+<span class="sd">        Contours casted to new coordinates.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    find_contours</span>
+<span class="sd">    draw_contours</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+            <span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span>
+            <span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">y</span>
+            <span class="n">contours</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">contours</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span>
+        <span class="n">contours</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">contours</span></div>
+
+
+<div class="viewcode-block" id="shrink"><a class="viewcode-back" href="../../generated/vuba.shrink.html#vuba.shrink">[docs]</a><span class="k">def</span> <span class="nf">shrink</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mask an image to a new roi.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Grayscale image to reduce the roi for.</span>
+<span class="sd">    by : int</span>
+<span class="sd">        Number of pixels to reduce roi by, default is 50.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Image with reduced roi.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function will shrink the roi by a uniform amount on all four</span>
+<span class="sd">    sides of an image, and not to a specific region within the image.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Mask</span>
+<span class="sd">    rect_mask</span>
+<span class="sd">    circle_mask</span>
+<span class="sd">    contouer_mask</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">-</span> <span class="n">by</span><span class="p">))</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">by</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="mi">255</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span></div>
+
+
+<div class="viewcode-block" id="rect_mask"><a class="viewcode-back" href="../../generated/vuba.rect_mask.html#vuba.rect_mask">[docs]</a><span class="k">def</span> <span class="nf">rect_mask</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a rectangular mask.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Grayscale image to produce the rectangular mask for.</span>
+<span class="sd">    dims : tuple or list</span>
+<span class="sd">        Rectangle(s) to base mask on. Note these should be</span>
+<span class="sd">        supplied in (x,y,w,h) format.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mask : ndarray</span>
+<span class="sd">        Rectangular mask at dimensions of bounding box.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Mask</span>
+<span class="sd">    shrink</span>
+<span class="sd">    circle_mask</span>
+<span class="sd">    contour_mask</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">rect_mask_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="n">draw_rectangles</span><span class="p">(</span><span class="n">rect_mask_</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rect_mask_</span></div>
+
+
+<div class="viewcode-block" id="circle_mask"><a class="viewcode-back" href="../../generated/vuba.circle_mask.html#vuba.circle_mask">[docs]</a><span class="k">def</span> <span class="nf">circle_mask</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a circular mask.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Grayscale image to produce circular mask for.</span>
+<span class="sd">    dims : tuple or list</span>
+<span class="sd">        Circle(s) to base mask on. Note these should be</span>
+<span class="sd">        supplied in (x,y,r) format.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mask : ndarray</span>
+<span class="sd">        Circular mask at x,y with radius r.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Mask</span>
+<span class="sd">    shrink</span>
+<span class="sd">    rect_mask</span>
+<span class="sd">    contour_mask</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">circle_mask_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="n">draw_circles</span><span class="p">(</span><span class="n">circle_mask_</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">circle_mask_</span></div>
+
+
+<div class="viewcode-block" id="contour_mask"><a class="viewcode-back" href="../../generated/vuba.contour_mask.html#vuba.contour_mask">[docs]</a><span class="k">def</span> <span class="nf">contour_mask</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">contours</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a contour mask at the dimensions of contour(s).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Grayscale image to produce circular mask for.</span>
+<span class="sd">    contours : list or ndarray</span>
+<span class="sd">        Contour(s) to create mask with.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mask : ndarray</span>
+<span class="sd">        Contour mask at the dimensions of the contour(s) supplied.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the supplied image is not grayscale.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Mask</span>
+<span class="sd">    shrink</span>
+<span class="sd">    rect_mask</span>
+<span class="sd">    circle_mask</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_channel_check</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">cnt_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>
+    <span class="n">draw_contours</span><span class="p">(</span><span class="n">cnt_mask</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cnt_mask</span></div>
+
+
+<span class="c1"># Contour filters ----------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span> <span class="nf">_contours_area</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience function for computing the area of contour(s). &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">areas</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">contours</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contours</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">areas</span>
+
+
+<div class="viewcode-block" id="smallest"><a class="viewcode-back" href="../../generated/vuba.smallest.html#vuba.smallest">[docs]</a><span class="k">def</span> <span class="nf">smallest</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contour filter that returns the smallest contour by area.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contours : list or ndarray</span>
+<span class="sd">        Contour(s) to filter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    contour : ndarray</span>
+<span class="sd">        Smallest contour by area.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    largest</span>
+<span class="sd">    parents</span>
+<span class="sd">    Area</span>
+<span class="sd">    Eccentricity</span>
+<span class="sd">    Solidity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">areas</span> <span class="o">=</span> <span class="n">_contours_area</span><span class="p">(</span><span class="n">contours</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">contours</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">areas</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="largest"><a class="viewcode-back" href="../../generated/vuba.largest.html#vuba.largest">[docs]</a><span class="k">def</span> <span class="nf">largest</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contour filter that returns the largest contour by area.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contours : list or ndarray</span>
+<span class="sd">        Contour(s) to filter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    contour : ndarray</span>
+<span class="sd">        Largest contour by area.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    smallest</span>
+<span class="sd">    parents</span>
+<span class="sd">    Area</span>
+<span class="sd">    Eccentricity</span>
+<span class="sd">    Solidity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">areas</span> <span class="o">=</span> <span class="n">_contours_area</span><span class="p">(</span><span class="n">contours</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">contours</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">areas</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="parents"><a class="viewcode-back" href="../../generated/vuba.parents.html#vuba.parents">[docs]</a><span class="k">def</span> <span class="nf">parents</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="n">hierarchy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Contour filter that returns only parent contours.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contours : list or ndarray</span>
+<span class="sd">        Contour(s) to filter.</span>
+<span class="sd">    hierarchy : ndarray</span>
+<span class="sd">        Corresponding hierarchy information for contours.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    contour : ndarray</span>
+<span class="sd">        All parent contours.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    smallest</span>
+<span class="sd">    largest</span>
+<span class="sd">    Area</span>
+<span class="sd">    Eccentricity</span>
+<span class="sd">    Solidity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parentLvl</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">contours</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parentLvl</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<span class="k">class</span> <span class="nc">_ByLimit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter values based on pre-defined limits.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Limit(s) required for filtering contours.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="nb">min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max</span> <span class="o">=</span> <span class="nb">max</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter x based on  a lower or upper limit, or both. If x is between either</span>
+<span class="sd">        of the pre-defined limits then it will be returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">min</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="nb">min</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">min</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">max</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="nb">min</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">x</span>
+            <span class="k">elif</span> <span class="nb">max</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">min</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="Area"><a class="viewcode-back" href="../../generated/vuba.Area.html#vuba.Area">[docs]</a><span class="k">class</span> <span class="nc">Area</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter contours by area based on a lower or upper limit, or both.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    min : int or float</span>
+<span class="sd">        Lower limit to filter contour areas.</span>
+<span class="sd">    max: int or float</span>
+<span class="sd">        Upper limit to filter contour areas.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filter : Area</span>
+<span class="sd">        Class object with ``__call__`` method that filters contours based on</span>
+<span class="sd">        the pre-defined area limits provided at initiation.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    smallest</span>
+<span class="sd">    largest</span>
+<span class="sd">    parents</span>
+<span class="sd">    Eccentricity</span>
+<span class="sd">    Solidity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Area.__init__"><a class="viewcode-back" href="../../generated/vuba.Area.html#vuba.Area.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span> <span class="o">=</span> <span class="n">_ByLimit</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contours</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Area&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter contours by area based on pre-defined limits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            List of contours to filter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            Filtered contours.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">areas</span> <span class="o">=</span> <span class="n">_contours_area</span><span class="p">(</span><span class="n">contours</span><span class="p">)</span>
+        <span class="n">_filtered</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">areas</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+                <span class="n">_filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">contours</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">_filtered</span></div>
+
+
+<div class="viewcode-block" id="Eccentricity"><a class="viewcode-back" href="../../generated/vuba.Eccentricity.html#vuba.Eccentricity">[docs]</a><span class="k">class</span> <span class="nc">Eccentricity</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter contours by eccentricity based on a lower or upper limit, or both.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    min : int or float</span>
+<span class="sd">        Lower eccentricity limit to filter contours.</span>
+<span class="sd">    max: int or float</span>
+<span class="sd">        Upper eccentricity limit to filter contours.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filter : Eccentricity</span>
+<span class="sd">        Class object with ``__call__`` method that filters contours based on</span>
+<span class="sd">        the pre-defined eccentricity limits provided at initiation.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    smallest</span>
+<span class="sd">    largest</span>
+<span class="sd">    parents</span>
+<span class="sd">    Area</span>
+<span class="sd">    Eccentricity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Eccentricity.__init__"><a class="viewcode-back" href="../../generated/vuba.Eccentricity.html#vuba.Eccentricity.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span> <span class="o">=</span> <span class="n">_ByLimit</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_eccentricity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contours</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convenience method for computing the eccentricity of contours. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>  <span class="c1"># filter to this size for below calculations</span>
+                <span class="n">center</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">orientation</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fitEllipse</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="n">major</span><span class="p">,</span> <span class="n">minor</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">axes</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">axes</span><span class="p">))</span>
+                <span class="n">eccentricity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">minor</span> <span class="o">/</span> <span class="n">major</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">eccentricity</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contours</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Eccentricity&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter contours by eccentricity based on pre-defined limits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            List of contours to filter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            Filtered contours.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eccentricity</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                <span class="n">_filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">contours</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">_filtered</span></div>
+
+
+<div class="viewcode-block" id="Solidity"><a class="viewcode-back" href="../../generated/vuba.Solidity.html#vuba.Solidity">[docs]</a><span class="k">class</span> <span class="nc">Solidity</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter contours by solidity based on a lower or upper limit, or both.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    min : int or float</span>
+<span class="sd">        Lower solidity limit to filter contours.</span>
+<span class="sd">    max: int or float</span>
+<span class="sd">        Upper solidity limit to filter contours.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    filter : Solidity</span>
+<span class="sd">        Class object with ``__call__`` method that filters contours based on</span>
+<span class="sd">        the pre-defined solidity limits provided at initiation.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Note that here the solidity of a contour is based on its area relative</span>
+<span class="sd">    to its corresponding convex hull.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    smallest</span>
+<span class="sd">    largest</span>
+<span class="sd">    parents</span>
+<span class="sd">    Area</span>
+<span class="sd">    Eccentricity</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Solidity.__init__"><a class="viewcode-back" href="../../generated/vuba.Solidity.html#vuba.Solidity.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span> <span class="o">=</span> <span class="n">_ByLimit</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_solidity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contours</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convenience method for computing the solidity of contours. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+            <span class="n">c_area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">hull</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">convexHull</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">hullarea</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">hull</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">c_area</span> <span class="o">/</span> <span class="n">hullarea</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contours</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Solidity&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter contours by solidity based on pre-defined limits.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            List of contours to filter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        contours : list</span>
+<span class="sd">            Filtered contours.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_filtered</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solidity</span><span class="p">(</span><span class="n">contours</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                <span class="n">_filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">contours</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">_filtered</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020-2021, Vuba
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
