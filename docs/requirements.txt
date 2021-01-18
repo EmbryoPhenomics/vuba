@@ -1,6 +1,6 @@
 numpy==1.16.2
 tqdm==4.48.2
-opencv-python==4.2.0
+opencv-python
 more_itertools==8.4.0
 natsort==7.0.1
 
