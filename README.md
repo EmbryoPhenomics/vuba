@@ -4,7 +4,7 @@
 
 **vuba** (formerly **cvu**) is an easy to use library for constructing [`OpenCV`](https://opencv.org/) HighGUI interfaces. 
 
-* **Documentation**: 
+* **Documentation**: https://vuba.readthedocs.io/en/latest/
 * **Example scripts**: [https://github.com/EmbryoPhenomics/vuba/examples](https://github.com/EmbryoPhenomics/vuba/tree/main/examples)
 * **Installation**: 
 * **Source code**: [https://github.com/EmbryoPhenomics/vuba/vuba](https://github.com/EmbryoPhenomics/vuba/tree/main/vuba)
