@@ -1,3 +1,5 @@
+.. _why-vuba:
+
 Why vuba?
 =========
 

@@ -3,9 +3,16 @@ Contour filters
 
 Many image analysis workflows contain methods that extract shapes that satisfy specific critera. These criteria can be simply based on the corresponding areas of the shapes, through to more complex characteristics such as their associated solidity and eccentricity. 
 
-vuba provides a series of contour filters that allow one to extract contour shapes that satisfy some of the aforementioned criteria. These can be serially combined to allow the combination of a variety of criteria and also come built-in with pre-defined limits for more fine-scale tuning.
+vuba provides a series of contour filters that allow one to extract contour shapes that satisfy some of the aforementioned criteria. These can be serially combined to allow the combination of a variety of criteria and also support pre-defined limits for more fine-scale tuning.
 
-Here, we will cover the basic filters first followed by the more complex filters that are dependent on additional parameters. 
+Here, we will cover the basic filters first, followed by the more complex filters that are dependent on additional parameters. For these examples, the following imports are required:
+
+.. ipython:: python
+
+	import numpy as np
+	import matplotlib.pyplot as plt
+	import cv2
+	import vuba
 
 Basic filters
 -------------
@@ -14,17 +21,16 @@ The basic filters that vuba provides are currently limited to the following: :py
 
 To demonstrate their usage, we need to first generate some contours to filter:
 
-.. code-block:: python
-
-	import vuba
-	import cv2
-	import numpy as np
+.. ipython:: python
 
 	# Create a handler for the reading from the video
 	video = vuba.Video('../examples/example_data/raw_video/test.avi')
 
 	# Read in the first frame and grayscale it 
 	first = video.read(index=0, grayscale=True)
+
+	# Shrink the roi of the image to remove the time-stamps
+	first = vuba.shrink(first, by=50)
 
 	# Threshold the grayscaled frame to a binary threshold (n=50, to=255)
 	_, thresh = cv2.threshold(first, 50, 255, cv2.THRESH_BINARY)
@@ -38,19 +44,19 @@ Now that we have our contours, we can apply our contour filters and visualise th
 
 We can retrieve the smallest contour (by area):
 
-.. code-block:: python
+.. ipython:: python
 
 	smallest = vuba.smallest(contours)
 
 but also the largest contour (also by area):
 
-.. code-block:: python
+.. ipython:: python
 
 	largest = vuba.largest(contours)
 
 and finally retrieve all parent contours:
 
-.. code-block:: python
+.. ipython:: python
 
 	parents = vuba.parents(contours, hierarchy)
 
@@ -60,7 +66,7 @@ To visualise the results, we now need draw the results on blank canvases and sti
 
 First we need to generate the canvases:
 
-.. code-block:: python
+.. ipython:: python
 
 	all_ = vuba.bgr(first)
 	l = all_.copy()
@@ -69,7 +75,7 @@ First we need to generate the canvases:
 
 Note that we needed to convert the grayscale frame back to BGR format to enable us to draw coloured shapes. Next we can draw our contours on each of these canvases:
 
-.. code-block:: python
+.. ipython:: python
 
 	vuba.draw_contours(p, parents, -1, (0,0,255), 2)
 	vuba.draw_contours(l, largest, -1, (255,0,0), 2)
@@ -78,7 +84,7 @@ Note that we needed to convert the grayscale frame back to BGR format to enable 
 
 Here we can take advantage of the wrapper :py:func:`~vuba.draw_contours` which accepts both lists and single numpy arrays. This avoids us having to write ``for`` loops for each list of contours. Finally, lets stitch our resultant images together and visualise them:
 
-.. code-block:: python
+.. ipython:: python
 
 	# Stack the frames so we can view them all at once
 	img1 = np.hstack((all_, p))
@@ -89,12 +95,8 @@ Here we can take advantage of the wrapper :py:func:`~vuba.draw_contours` which a
 	img = cv2.resize(img, video.resolution)
 
 	# And display it
-	cv2.imshow('All contours/Parents/Largest/Smallest:', img)
-	cv2.waitKey()
-
-This should give us an image that looks like the following:
-
-* Add an asset here
+	@savefig simple_filters.png width=8in
+	plt.imshow(img)
 
 Complex filters
 ---------------
@@ -105,7 +107,7 @@ To demonstrate their usage, we will continue the script started above and add so
 
 First, let's create our filters, we will need an area and eccentricity filter:
 
-.. code-block:: python
+.. ipython:: python
 
 	# Initiate a relatively small area filter
 	area_filter = vuba.Area(min=50, max=300)
@@ -115,33 +117,32 @@ First, let's create our filters, we will need an area and eccentricity filter:
 
 Now that we have our filters, we can apply them to the contours we created above:
 
-.. code-block:: python
+.. ipython:: python
 
 	# Serially combine the filters to extract our shapes
 	small_elliptical = area_filter(circle_filter(contours))
 
 Finally, let's visualise our results to see what we extracted:
 
-.. code-block:: python
+.. ipython:: python
 
 	# Draw the shapes on the frame used previously (note the format conversion)
 	elliptical_img = vuba.bgr(first)
-	vuba.draw_contours(elliptical_img, small_circles, -1, (0,255,0), 1)
+	vuba.draw_contours(elliptical_img, small_elliptical, -1, (0,255,0), 1)
 
-	# And display the output
-	cv2.imshow('Small elliptical shapes', elliptical_img)
-	cv2.waitKey()
-
-This should give us an image that looks like the following:
-
-* Add image
+	@savefig complex_filters.png width=8in
+	plt.imshow(elliptical_img)
 
 Now, these aren't much but hopefully show you how you can combine some more complex contour filters to select shapes that satisfy specific criteria.
 
 See also
 --------
 
-For additional example scripts that cover these filters in more complex applications see the following:
+For additional example scripts that cover these filters in more complex applications, see the following:
 
-* examples/image_operations/contour_filters.py
-* exampes/image_operations/contours_filter_with_gui.py
+- `examples/image_operations/contour_filters.py`_
+- `examples/image_operations/contour_filter_with_gui.py`_
+
+.. _examples/image_operations/contour_filters.py: https://github.com/EmbryoPhenomics/vuba/tree/main/examples/image_operations/contour_filters.py
+
+.. _examples/image_operations/contour_filter_with_gui.py: https://github.com/EmbryoPhenomics/vuba/blob/main/examples/image_operations/contour_filters_with_gui.py

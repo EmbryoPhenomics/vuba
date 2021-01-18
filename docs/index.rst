@@ -29,13 +29,11 @@ Documentation
 **User Guide**
 
 * :doc:`interface-framework`
-* :doc:`basic-interfaces`
-* :doc:`more-advanced-interfaces`
+* :doc:`creating-interfaces`
+* :doc:`contour-operations`
+* :doc:`low-level-operations`
 * :doc:`reading-images`
 * :doc:`writing-images`
-* :doc:`drawing`
-* :doc:`mask`
-* :doc:`contour-operations`
 
 .. toctree::
    :maxdepth: 1
@@ -43,13 +41,11 @@ Documentation
    :caption: User Guide
 
    interface-framework
-   basic-interfaces
-   more-advanced-interfaces
+   creating-interfaces
+   contour-operations
+   low-level-operations
    reading-images
    writing-images
-   drawing
-   mask
-   contour-operations
 
 **API Reference**
 

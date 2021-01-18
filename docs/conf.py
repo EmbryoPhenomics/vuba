@@ -50,6 +50,8 @@ extensions = [
     "sphinx_autodoc_typehints",
     "sphinx.ext.extlinks",
     "sphinx.ext.mathjax",
+    "IPython.sphinxext.ipython_directive",
+    "IPython.sphinxext.ipython_console_highlighting",
 ]
 
 autosummary_generate = True
