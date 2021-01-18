@@ -521,19 +521,26 @@ class Writer:
         if isinstance(output, str):
             if not codec:
                 if footage:
-                    codec = footage.codec
+                    if footage.video:
+                        codec = footage.codec
+                    else:
+                        codec = "MJPG"
                 else:
                     codec = "MJPG"
 
             fourcc = cv2.VideoWriter_fourcc(*codec)
 
-            if footage.video:
-                if not fps:
-                    fps = footage.fps
-            else:
-                if not fps:
+            if not fps:
+                if footage:
+                    if footage.fps:
+                        fps = footage.fps
+                    else:
+                        raise ValueError(
+                            "When working with individual images you must supply a frame-rate to export footage at."
+                        )
+                else:
                     raise ValueError(
-                        "When working with individual images you must supply a frame-rate to export footage at."
+                        "Integer must be supplied to fps when an instance of vuba.Video is not supplied."
                     )
 
             self.encoder = cv2.VideoWriter(
