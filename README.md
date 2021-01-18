@@ -1,6 +1,6 @@
 # vuba
 
-[![pypi](https://readthedocs.org/projects/xray/badge/?version=latest)](https://xarray.pydata.org/) [![docs](https://img.shields.io/pypi/v/vuba.svg)](https://pypi.python.org/pypi/vuba/) [![code style black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+[![pypi](https://readthedocs.org/projects/vuba/badge/?version=latest)](https://vuba.readthedocs.io/en/latest/) [![docs](https://img.shields.io/pypi/v/vuba.svg)](https://pypi.python.org/pypi/vuba/) [![code style black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 **vuba** (formerly **cvu**) is an easy to use library for constructing [`OpenCV`](https://opencv.org/) HighGUI interfaces. 
 
