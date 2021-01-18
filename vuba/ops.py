@@ -15,7 +15,7 @@ def _channel_check(img, type_):
     channels = len(np.asarray(img).shape)
     if channels != type_:
         raise ValueError(
-            f"Input image needs to be {exc_info[type_]} or have {type_} channels, instead an image with {channels} was provided."
+            f"Input image needs to be {exc_info[type_]} or have {type_} channels. Instead an image with {channels} channels was provided."
         )
 
 
