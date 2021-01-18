@@ -6,6 +6,7 @@ build
 # sphinx build directory
 _build
 generated
+savefig
 
 # setup.py dist directory
 dist
