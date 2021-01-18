@@ -47,11 +47,6 @@ def find_contours(img, *args, **kwargs):
     ValueError
         If the supplied image is not grayscale or has greater than 2 channels.
 
-    Examples
-    --------
-    For some examples of this function please see the following scripts in
-    ``examples/image_operations``.
-
     """
     _channel_check(img, 2)
 
@@ -82,12 +77,6 @@ def draw_contours(img, contours, *args, **kwargs):
     draw_rectangles
     draw_circles
 
-    Examples
-    --------
-    Please see the following scripts for example use cases of this function:
-
-    * ``examples/image_operations/drawing.py``
-
     """
     if isinstance(contours, list):
         for c in contours:
@@ -116,9 +105,6 @@ def draw_rectangles(img, dims, *args, **kwargs):
     --------
     draw_contours
     draw_circles
-
-    Examples
-    --------
 
     """
     if isinstance(dims, list):
@@ -150,9 +136,6 @@ def draw_circles(img, dims, *args, **kwargs):
     --------
     draw_contours
     draw_rectangles
-
-    Examples
-    --------
 
     """
     if isinstance(dims, list):
