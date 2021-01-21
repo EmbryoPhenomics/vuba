@@ -387,7 +387,7 @@ class Video:
             self.video.set(1, index)
             success, frame = self.video.read()
         else:
-            frame = cv2.imread(self.filenames[index], cv2.IMREAD_ANYDEPTH)
+            frame = cv2.imread(self.filenames[index])
 
         if grayscale:
             frame = ops.gray(frame)
@@ -428,7 +428,7 @@ class Video:
                     yield frame
         else:
             for fn in self.filenames[slice(start, stop, step)]:
-                frame = cv2.imread(fn, cv2.IMREAD_ANYDEPTH)
+                frame = cv2.imread(fn)
                 if grayscale:
                     frame = ops.gray(frame)
                 yield frame
