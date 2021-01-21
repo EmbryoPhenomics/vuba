@@ -25,6 +25,7 @@ Drawing
    draw_contours
    draw_rectangles
    draw_circles
+   draw_ellipses
 
 Mask constructors
 -----------------
@@ -57,5 +58,8 @@ Additional contour functions
 .. autosummary::
    :toctree: generated/
 
+   fit_rectangles
+   fit_circles
+   fit_ellipses
    find_contours
    cast_contours
