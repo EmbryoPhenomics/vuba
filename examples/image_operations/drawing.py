@@ -24,24 +24,15 @@ rects = none.copy()
 circs = none.copy()
 
 # Find all bounding boxes for the contours detected
-bboxs = [cv2.boundingRect(c) for c in contours]
+bboxs = vuba.fit_rectangles(contours)
 
 # Compute circle dimensions based on contour moments
-circ_coords = []
-for c in contours:
-    moments = cv2.moments(c)
-
-    # If the contour area is 0 then we ignore it
-    if not moments["m00"] == 0:
-        cx = int(moments["m10"] / moments["m00"])  # compute centroid in X
-        cy = int(moments["m01"] / moments["m00"])  # compute centroid in Y
-        r = int(np.sqrt(moments["m00"]))  # compute a reasonable radius
-        circ_coords.append((cx, cy, r))
+circles = vuba.fit_circles(contours)
 
 # Draw all the shapes on each of the corresponding tiles
 vuba.draw_contours(cnts, contours, -1, (0, 255, 0), 1)
 vuba.draw_rectangles(rects, bboxs, (0, 255, 0), 1)
-vuba.draw_circles(circs, circ_coords, (0, 255, 0), 1)
+vuba.draw_circles(circs, circles, (0, 255, 0), 1)
 
 # Stack the tiles so we can view them all at once
 img1 = np.hstack((none, cnts))
