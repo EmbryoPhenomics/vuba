@@ -38,6 +38,7 @@ Mask constructors
    rect_mask
    circle_mask
    contour_mask
+   ellipse_mask
 
 Contour filters
 ---------------
