@@ -57,6 +57,80 @@ def find_contours(img, *args, **kwargs):
     return contours, hierarchy
 
 
+def fit_circles(contours):
+    """
+    Fit minimum enclosing circles to contour(s).
+
+    Parameters
+    ----------
+    contours : ndarray or list
+        Contour(s) to fit circles to.
+
+    Returns
+    -------
+    circles : ndarray or list
+        An array or list corresponding to dimensions to circles fitted.
+
+    """
+    if isinstance(contours, list):
+        ret = [cv2.minEnclosingCircle(c) for c in contours]
+    else:
+        ret = cv2.minEnclosingCircle(contours)
+    return ret
+
+
+def fit_rectangles(contours, rotate=False):
+    """
+    Fit bounding boxes to contour(s).
+
+    Parameters
+    ----------
+    contours : ndarray or list
+        Contour(s) to fit circles to.
+    rotate : bool
+        Whether to fit rotated bounding boxes, default is False.
+
+    Returns
+    -------
+    rectangles : ndarray or list
+        An array or list corresponding to dimensions to bounding boxes fitted.
+
+    """
+    if isinstance(contours, list):
+        if rotate:
+            ret = [cv2.minAreaRect(c) for c in contours]
+        else:
+            ret = [cv2.boundingRect(c) for c in contours]
+    else:
+        if rotate:
+            ret = cv2.minAreaRect(contours)
+        else:
+            ret = cv2.boundingRect(contours)
+    return ret
+
+
+def fit_ellipses(contours):
+    """
+    Fit ellipses to contour(s).
+
+    Parameters
+    ----------
+    contours : ndarray or list
+        Contour(s) to fit ellipses to.
+
+    Returns
+    -------
+    ellipses : ndarray or list
+        An array or list corresponding to dimensions to ellipses fitted.
+
+    """
+    if isinstance(contours, list):
+        ret = [cv2.fitEllipse(c) for c in contours]
+    else:
+        ret = cv2.fitEllipse(c)
+    return ret
+
+
 def draw_contours(img, contours, *args, **kwargs):
     """
     Convenience function for drawing contour(s) on an image.
@@ -76,6 +150,7 @@ def draw_contours(img, contours, *args, **kwargs):
     --------
     draw_rectangles
     draw_circles
+    draw_ellipses
 
     """
     if isinstance(contours, list):
@@ -105,6 +180,7 @@ def draw_rectangles(img, dims, *args, **kwargs):
     --------
     draw_contours
     draw_circles
+    draw_ellipses
 
     """
     if isinstance(dims, list):
@@ -118,7 +194,7 @@ def draw_rectangles(img, dims, *args, **kwargs):
 
 def draw_circles(img, dims, *args, **kwargs):
     """
-    Convenience function for drawing rectangle(s) on an image.
+    Convenience function for drawing circle(s) on an image.
 
     Parameters
     ----------
@@ -126,25 +202,54 @@ def draw_circles(img, dims, *args, **kwargs):
         Image to draw contours on.
     dims : tuple or list
         Circle(s) to draw on the supplied image. Note these should be
-        supplied in (x,y,r) format.
+        supplied in ((x,y),r) format.
     *args : tuple
-        Additional arguments `cv2.rectangle` will require.
+        Additional arguments `cv2.circle` will require.
     *kwargs : tuple
-        Additional keyword arguments `cv2.rectangle` will require.
+        Additional keyword arguments `cv2.circle` will require.
 
     See Also
     --------
     draw_contours
     draw_rectangles
+    draw_ellipses
 
     """
     if isinstance(dims, list):
         for c in dims:
-            x, y, r = c
-            cv2.circle(img, (x, y), r, *args, **kwargs)
+            cv2.circle(img, *c, *args, **kwargs)
     else:
-        x, y, r = dims
-        cv2.circle(img, (x, y), r, *args, **kwargs)
+        cv2.circle(img, *dims, *args, **kwargs)
+
+
+def draw_ellipses(img, dims, *args, **kwargs):
+    """
+    Convenience function for drawing ellipse(s) on an image.
+
+    Parameters
+    ----------
+    img : ndarray
+        Image to draw contours on.
+    dims : tuple or list
+        Ellipse(s) to draw on the supplied image. Note these should be
+        supplied in ((x,y),(w,h),r) format.
+    *args : tuple
+        Additional arguments `cv2.ellipse` will require.
+    *kwargs : tuple
+        Additional keyword arguments `cv2.ellipse` will require.
+
+    See Also
+    --------
+    draw_contours
+    draw_rectangles
+    draw_circles
+
+    """
+    if isinstance(dims, list):
+        for c in dims:
+            cv2.ellipse(img, *c, *args, **kwargs)
+    else:
+        cv2.ellipse(img, *dims, *args, **kwargs)
 
 
 def gray(frame):
