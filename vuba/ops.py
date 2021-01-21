@@ -356,7 +356,7 @@ class Mask:
     -------
     mask : Mask
         Class object with ``__call__`` method that performs ``bitwise_and``
-        with the the mask provided at initiation.
+        with the mask provided at initiation.
 
     Raises
     ------
