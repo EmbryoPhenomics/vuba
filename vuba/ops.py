@@ -183,14 +183,14 @@ def draw_rectangles(img, dims, *args, **kwargs):
     draw_ellipses
 
     """
-    if isinstance(dims, list):
-        for r in dims:
-            x, y, w, h = r
-            cv2.rectangle(img, (x, y), (x + w, y + h), *args, **kwargs)
-    else:
-        x, y, w, h = dims
+    def _draw(rect):
+        x,y,w,h = rect
         cv2.rectangle(img, (x, y), (x + w, y + h), *args, **kwargs)
 
+    if isinstance(dims, list):
+        for r in dims: _draw(r)
+    else:
+        _draw(dims)
 
 def draw_circles(img, dims, *args, **kwargs):
     """
@@ -215,11 +215,15 @@ def draw_circles(img, dims, *args, **kwargs):
     draw_ellipses
 
     """
+    def _draw(circ):
+        (x,y),r = circ
+        x,y,r = map(int, (x,y,r))
+        cv2.circle(img, (x,y), r, *args, **kwargs)
+
     if isinstance(dims, list):
-        for c in dims:
-            cv2.circle(img, *c, *args, **kwargs)
+        for c in dims: _draw(c)
     else:
-        cv2.circle(img, *dims, *args, **kwargs)
+        _draw(c)
 
 
 def draw_ellipses(img, dims, *args, **kwargs):
@@ -232,7 +236,7 @@ def draw_ellipses(img, dims, *args, **kwargs):
         Image to draw contours on.
     dims : tuple or list
         Ellipse(s) to draw on the supplied image. Note these should be
-        supplied in ((x,y),(w,h),r) format.
+        supplied in ((x,y),(w,h),a) format.
     *args : tuple
         Additional arguments `cv2.ellipse` will require.
     *kwargs : tuple
@@ -245,11 +249,12 @@ def draw_ellipses(img, dims, *args, **kwargs):
     draw_circles
 
     """
+
     if isinstance(dims, list):
         for c in dims:
-            cv2.ellipse(img, *c, *args, **kwargs)
+            cv2.ellipse(img, c, *args, **kwargs)
     else:
-        cv2.ellipse(img, *dims, *args, **kwargs)
+        cv2.ellipse(img, dims, *args, **kwargs)
 
 
 def gray(frame):
@@ -493,7 +498,7 @@ def rect_mask(img, dims):
     Returns
     -------
     mask : ndarray
-        Rectangular mask at dimensions of bounding box.
+        Rectangular mask.
 
     Raises
     ------
@@ -510,7 +515,7 @@ def rect_mask(img, dims):
     """
     _channel_check(img, 2)
 
-    rect_mask_ = np.zeros(img.shape, dtype="uint8")
+    rect_mask_ = np.zeros_like(img)
     draw_rectangles(rect_mask_, dims, 255, -1)
     return rect_mask_
 
@@ -525,12 +530,12 @@ def circle_mask(img, dims):
         Grayscale image to produce circular mask for.
     dims : tuple or list
         Circle(s) to base mask on. Note these should be
-        supplied in (x,y,r) format.
+        supplied in ((x,y),r) format.
 
     Returns
     -------
     mask : ndarray
-        Circular mask at x,y with radius r.
+        Circular mask.
 
     Raises
     ------
@@ -547,10 +552,46 @@ def circle_mask(img, dims):
     """
     _channel_check(img, 2)
 
-    circle_mask_ = np.zeros(img.shape, dtype="uint8")
+    circle_mask_ = np.zeros_like(img)
     draw_circles(circle_mask_, dims, 255, -1)
     return circle_mask_
 
+def ellipse_mask(img, dims):
+    """
+    Create an ellipse mask.
+
+    Parameters
+    ----------
+    img : ndarray
+        Grayscale image to produce elliptical mask for.
+    dims : tuple or list
+        Ellipse(s) to base mask on. Note these should be
+        supplied in ((x,y),(w,h),a) format.
+
+    Returns
+    -------
+    mask : ndarray
+        Elliptical mask.
+
+    Raises
+    ------
+    ValueError
+        If the supplied image is not grayscale.
+
+    See Also
+    --------
+    Mask
+    shrink
+    rect_mask
+    circle_mask
+    contour_mask
+
+    """
+    _channel_check(img, 2)
+
+    ell_mask_ = np.zeros_like(img)
+    draw_ellipses(ell_mask_, dims, 255, -1)
+    return ell_mask_
 
 def contour_mask(img, contours):
     """
@@ -583,7 +624,7 @@ def contour_mask(img, contours):
     """
     _channel_check(img, 2)
 
-    cnt_mask = np.zeros(img.shape, dtype="uint8")
+    cnt_mask = np.zeros_like(img)
     draw_contours(cnt_mask, contours, -1, 255, -1)
     return cnt_mask
 
