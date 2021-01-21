@@ -69,6 +69,7 @@ Currently, vuba provides three drawing wrappers:
 - :py:func:`~vuba.draw_contours`
 - :py:func:`~vuba.draw_rectangles`
 - :py:func:`~vuba.draw_circles`
+- :py:func:`~vuba.draw_ellipses`
 
 These wrappers support usage with both single and multiple shapes. This can remove the sometimes cumbersome series of ``for`` loops one has to write when drawing multiple shapes. Below, we will demonstrate their usage using a simple binary threshold applied to our example video:
 
@@ -110,6 +111,7 @@ Vuba provides a number of convenience functions for creating masks for ``bitwise
 
 * :py:func:`~vuba.rect_mask`
 * :py:func:`~vuba.circle_mask`
+* :py:func:`~vuba.ellipse_mask`
 * :py:func:`~vuba.contour_mask`
 
 Each of these performs much as you would expect: you supply coordinates and parameters that describe the corresponding shape(s), and a mask is created that enables one to segment to those shapes in images of the same size. Because each of these contructors uses the above drawing functions under the hood, you can supply multiple shapes and construct a mask that corresponds to them:
@@ -117,7 +119,7 @@ Each of these performs much as you would expect: you supply coordinates and para
 .. ipython:: python
 
 	# Using the above contours to find multiple bounding boxes
-	bboxs = [cv2.boundingRect(c) for c in contours]
+	bboxs = vuba.fit_rectangles(contours)
 	mask = vuba.rect_mask(first, bboxs)
 
 	out = vuba.bgr(mask)
