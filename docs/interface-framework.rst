@@ -3,7 +3,7 @@
 Vuba's interface framework
 ==========================
 
-All of the HighGUI constructors that vuba provides are developed such that any application is centred around its image processing component, with UI components such as trackbars being secondary. As such, any changes made to a UI component will propagate back to the image processing component and the results will be visualised in the interactive window. Below we will cover this framework in-depth, and in subsequent guides walk you through how you may go about constructing some interfaces. 
+All of the HighGUI constructors that vuba provides are developed such that any application is centred around its image processing component, with UI components such as trackbars being secondary. As such, any changes made to a UI component will propagate back to the image processing component, and the results will be visualised in the interactive window. Below we will cover this framework in-depth, and in a subsequent guide walk you through how you may go about constructing some interfaces. 
 
 Core UI components  
 ------------------
@@ -39,14 +39,14 @@ Similarly, the recommended layout for image processing callbacks using :py:meth:
 	    # Return the output
 	    return thresh
 
-Here, we first pull the current frame stored in the interface instance (from :py:attr:`FrameGUI.frame <vuba.FrameGUI.frame>`) and the current trackbar(s) value (using :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>`). We then pass these inputs to our image processing code (which is a simply binary threshold here) and then return the output to be visualised in the interactive window through our trackbar callbacks. In this sense, trackbar callbacks are the intermediate layer that communicate with the image processing and visualise the results in the interactive window:
+Here, we first pull the current frame stored in the interface instance (from :py:attr:`FrameGUI.frame <vuba.FrameGUI.frame>`) and the current trackbar(s) value (using :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>`). We then pass these inputs to our image processing code (which is a simple binary threshold here) and then return the output to be visualised in the interactive window through our trackbar callbacks. In this sense, trackbar callbacks are the intermediate layer that communicate with the image processing layer and subsequently visualise the results in the interactive window:
 
 .. image:: _static/ui_framework.png
 
 Retrieving trackbar information
 -------------------------------
 
-:py:class:`vuba.BaseGUI` employs a dictionary interface for retrieving and assigning values associated with trackbars, primarily via :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>` and :py:meth:`BaseGUI.__setitem__ <vuba.BaseGUI.__setitem__>` respectively. Here, the keys are the user-provided identification strings supplied to the ``id`` argument in :py:meth:`BaseGUI.trackbar <vuba.BaseGUI.trackbar>`. In addition to these two methods is :py:meth:`BaseGUI.values <vuba.BaseGUI.values>`. This methods retrieves all current trackbar values and is useful in applications which have multiple trackbars where repeated calls to :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>` in :py:meth:`BaseGUI.method <vuba.BaseGUI.method>` would be too verbose. 
+:py:class:`vuba.BaseGUI` employs a dictionary interface for retrieving and assigning values associated with trackbars, primarily via :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>` and :py:meth:`BaseGUI.__setitem__ <vuba.BaseGUI.__setitem__>` respectively. Here, the keys are the user-provided identification strings supplied to the ``id`` argument in :py:meth:`BaseGUI.trackbar <vuba.BaseGUI.trackbar>`. In addition to these two methods is :py:meth:`BaseGUI.values <vuba.BaseGUI.values>`. This method retrieves all current trackbar values and is useful in applications which have multiple trackbars where repeated calls to :py:meth:`BaseGUI.__getitem__ <vuba.BaseGUI.__getitem__>` in :py:meth:`BaseGUI.method <vuba.BaseGUI.method>` would be cumbersome. 
 
 Key attributes
 --------------

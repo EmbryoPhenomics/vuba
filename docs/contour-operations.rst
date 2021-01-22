@@ -105,7 +105,7 @@ In addition to the basic contour filters mentioned above, vuba also supplies sev
 
 To demonstrate their usage, we will continue the script started above and add some additional filtering to retrieve small elliptical shapes.
 
-First, let's create our filters, we will need an area and eccentricity filter:
+First, let's create our filters. We will need an area and eccentricity filter:
 
 .. ipython:: python
 

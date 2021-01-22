@@ -3,7 +3,7 @@
 Creating interfaces
 ===================
 
-Vuba provides a series of OpenCV HighGUI contrustors for easily creating image analysis user interfaces. All of these contructors are based around the base constructor class: :py:class:`~vuba.BaseGUI`. This class provides a series of decorators that allow us to code up complex interfaces using simple, declarative code. 
+Vuba provides a series of OpenCV HighGUI contructors for easily creating image analysis user interfaces. All of these contructors are based around the base constructor class: :py:class:`~vuba.BaseGUI`. This class provides a series of decorators that allow us to code up complex interfaces using simple, declarative code. 
 
 Single trackbar interfaces
 --------------------------
@@ -28,7 +28,7 @@ Now that we have some footage, we can go about creating our user interface. Firs
     # Initiate an instance of FrameGUI
     gui = vuba.FrameGUI(first, "Threshold viewer")
 
-Next we need to integrate our image processing into the interface. Since we are only doing a binary threshold here this is relatively simple:
+Next we need to integrate our image processing function into the interface. Since we are only doing a binary threshold here this is relatively simple:
 
 .. code-block:: python
 
@@ -65,7 +65,7 @@ The output of this code should give you the following gui:
 
 .. image:: _static/single_trackbar_gui.png
 
-This might seem trivial, but in less than 20 lines of code (excluding comments and whitespace) we have created a user interface that enables us to view the output of a variable binary threhsold (for the full script, see ...). Note that because all gui constructors use the same base class, we only have to address the video constructor and supply an object that describes a video instead, to apply the interface to a movie:
+This might seem trivial, but in less than 20 lines of code (excluding comments and whitespace) we have created a user interface that enables us to view the output of a variable binary threhsold. Note that because all gui constructors use the same base class, we only have to address the video constructor and supply an object that describes a video instead, to apply the interface to a movie:
 
 .. code-block:: python
 
@@ -98,7 +98,7 @@ This might seem trivial, but in less than 20 lines of code (excluding comments a
 Multi-trackbar interfaces
 -------------------------
 
-To add additional trackbars to an interface, we only need specify another trackbar using :py:meth:`BaseGUI.trackbar <vuba.BaseGUI.trackbar>` and add additional steps to our image processing method:
+To add additional trackbars to an interface, we only need to specify another trackbar using :py:meth:`BaseGUI.trackbar <vuba.BaseGUI.trackbar>` and add additional steps to our image processing method:
 
 .. code-block:: python
 

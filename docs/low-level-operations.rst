@@ -3,11 +3,11 @@
 Low-level operations
 ====================
 
-In addition to contour filters, vuba also provides a number of wrappers and convenience functions around some of the lower level image operations provided with OpenCV_. These can be grouped in the following categories:
+In addition to contour filters, vuba also provides a number of wrappers and convenience functions around some of the lower level image operations provided with OpenCV_. These can be grouped into the following categories:
 
-- Format conversion: wrappers that permit conversion between colour spaces.
-- Drawing: functions related to drawing different shapes on images that have an equivalent API regardless of whether single or multiple shapes are requested to be drawn.
-- Mask contructors: convenience functions for both creating masks and performing segmentation based on masks created.
+- **Format conversion**: wrappers that permit conversion between colour spaces.
+- **Drawing**: functions related to drawing different shapes on images that have an equivalent API regardless of whether single or multiple shapes are requested to be drawn.
+- **Mask contructors**: convenience functions for both creating masks, and performing segmentation based on masks created.
 
 Here, we will demonstrate their usage in several examples. There are links at the end of this guide to more in-depth example scripts that are hosted on github.
 
