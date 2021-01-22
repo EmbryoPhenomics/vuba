@@ -64,7 +64,7 @@ For more information on these wrappers, please see the following API documentati
 Drawing
 -------
 
-Currently, vuba provides three drawing wrappers:
+Currently, vuba provides four drawing wrappers:
 
 - :py:func:`~vuba.draw_contours`
 - :py:func:`~vuba.draw_rectangles`
