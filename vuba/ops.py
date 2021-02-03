@@ -127,7 +127,7 @@ def fit_ellipses(contours):
     if isinstance(contours, list):
         ret = [cv2.fitEllipse(c) for c in contours]
     else:
-        ret = cv2.fitEllipse(c)
+        ret = cv2.fitEllipse(contours)
     return ret
 
 
