@@ -601,7 +601,7 @@ class Writer:
             elif channels == 2 and self.is_color:
                 frame = ops.bgr(frame)
                 warnings.warn(
-                    f"Frame has been grayscaled to ensure successful encoding. Supplied frame vs encoder format: {channels} , {3, self.is_color}",
+                    f"Frame has been converted to BGR format to ensure successful encoding. Supplied frame vs encoder format: {channels} , {3, self.is_color}",
                     UserWarning,
                 )
             self.encoder.write(frame)
