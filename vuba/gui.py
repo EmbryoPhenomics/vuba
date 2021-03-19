@@ -428,6 +428,11 @@ class FramesGUI(BaseGUI):
     ----------
     frames : list or ndarray
         Images to manipulate within the interface.
+    indices : tuple
+        Frame indices to limit GUI to, especially useful when analysing long sequences
+        of footage. First index will always be interpreted as the minimum index and the 
+        second as the maximum index. If None is specified to either limit, then that limit
+        will be ignored. Default is for no limits, i.e. (None, None).
     title : str
         Title of the interface window.
 
@@ -475,10 +480,17 @@ class FramesGUI(BaseGUI):
 
     """
 
-    def __init__(self, frames, *args, **kwargs):
+    def __init__(self, frames, indices=(None, None), *args, **kwargs):
         self.frames = frames
         super(FramesGUI, self).__init__(*args, **kwargs)
-        self.trackbar("Frames", "frames", 0, len(self.frames))(self.read)
+
+        lower_ind, upper_ind = indices
+        if not lower_ind:
+            lower_ind = 0
+        if not upper_ind:
+            upper_ind = len(video)
+
+        self.trackbar("Frames", "frames", lower_ind, upper_ind)(self.read)
 
     @staticmethod
     def read(gui, val) -> "FramesGUI":
@@ -496,9 +508,10 @@ class FramesGUI(BaseGUI):
         to displaying the frame.
 
         """
-        gui.frame = gui.frames[val]
-        frame_proc = gui.process()
-        cv2.imshow(gui.title, frame_proc)
+        if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
+            gui.frame = gui.frames[val]
+            frame_proc = gui.process()
+            cv2.imshow(gui.title, frame_proc)
 
 
 class VideoGUI(BaseGUI):
@@ -509,6 +522,11 @@ class VideoGUI(BaseGUI):
     ----------
     video : vuba.Video
         Video to manipulate within the interface.
+    indices : tuple
+        Frame indices to limit GUI to, especially useful when analysing long sequences
+        of footage. First index will always be interpreted as the minimum index and the 
+        second as the maximum index. If None is specified to either limit, then that limit
+        will be ignored. Default is for no limits, i.e. (None, None).
     title : str
         Title of the interface window.
 
@@ -540,10 +558,17 @@ class VideoGUI(BaseGUI):
 
     """
 
-    def __init__(self, video, *args, **kwargs):
+    def __init__(self, video, indices=(None, None), *args, **kwargs):
         self.video, self.release = imio.open_video(video)
         super(VideoGUI, self).__init__(*args, **kwargs)
-        self.trackbar("Frames", "frames", 0, len(self.video))(self.read)
+
+        lower_ind, upper_ind = indices
+        if not lower_ind:
+            lower_ind = 0
+        if not upper_ind:
+            upper_ind = len(video)
+
+        self.trackbar("Frames", "frames", lower_ind, upper_ind)(self.read)
 
     @staticmethod
     def read(gui, val) -> "VideoGUI":
@@ -561,9 +586,10 @@ class VideoGUI(BaseGUI):
         to displaying the frame.
 
         """
-        gui.frame = gui.video.read(val, grayscale=False)
-        frame_proc = gui.process()
-        cv2.imshow(gui.title, frame_proc)
+        if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
+            gui.frame = gui.video.read(val, grayscale=False)
+            frame_proc = gui.process()
+            cv2.imshow(gui.title, frame_proc)
 
     def run(self) -> "VideoGUI":
         """
