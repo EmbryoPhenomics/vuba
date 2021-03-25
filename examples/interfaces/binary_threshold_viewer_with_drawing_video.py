@@ -6,7 +6,7 @@ import numpy as np
 video = vuba.Video("../example_data/raw_video/test.avi")
 
 # Initiate an instance of VideoGUI
-gui = vuba.VideoGUI(video, "Threshold viewer")
+gui = vuba.VideoGUI(video, title="Threshold viewer")
 
 # Here we are declaring a main processing method. This is where our code goes for
 # thresholding the image and returning it

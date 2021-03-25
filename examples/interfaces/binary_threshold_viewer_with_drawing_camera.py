@@ -20,11 +20,11 @@ camera = vuba.Video(0)
 capture_stream = grab_frames(camera)
 
 # Initiate an instance of CameraGUI
-gui = vuba.CameraGUI(capture_stream, "Threshold viewer")
+gui = vuba.StreamGUI(capture_stream, "Threshold viewer")
 
 # Here we are declaring a main processing method. This is where our code goes for
 # thresholding an image and returning it
-@gui.process
+@gui.method
 def threshold(gui):
     frame = gui.frame.copy()  # create a copy of the current frame
     thresh_val = gui["thresh_val"]  # grab the current threshold value

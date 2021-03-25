@@ -8,7 +8,7 @@ video = vuba.Video("../example_data/raw_video/test.avi")
 first = video.read(index=0)
 
 # Initiate an instance of FrameGUI
-gui = vuba.FrameGUI(first, "Threshold viewer")
+gui = vuba.FrameGUI(first, title="Threshold viewer")
 
 # Here we are declaring a main processing method. This is where our code goes for
 # thresholding the image and returning it
