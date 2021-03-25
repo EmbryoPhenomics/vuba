@@ -488,7 +488,7 @@ class FramesGUI(BaseGUI):
         if not lower_ind:
             lower_ind = 0
         if not upper_ind:
-            upper_ind = len(video)
+            upper_ind = len(frames)
 
         self.trackbar("Frames", "frames", lower_ind, upper_ind)(self.read)
 
