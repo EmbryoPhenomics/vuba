@@ -477,8 +477,8 @@ def shrink(img, by=50):
     _channel_check(img, 2)
 
     mask = np.zeros_like(img)
-    w, h = map(int, tuple(np.asarray(img.shape) - by))
-    cv2.rectangle(mask, (by, by), (w, h), 255, -1)
+    h, w = img.shape
+    mask[by:h-by, by:w-by] = 1
     img = cv2.bitwise_and(img, img, mask=mask)
     return img
 
