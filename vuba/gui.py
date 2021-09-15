@@ -490,7 +490,9 @@ class FramesGUI(BaseGUI):
         if not upper_ind:
             upper_ind = len(frames)
 
-        self.trackbar("Frames", "frames", lower_ind, upper_ind)(self.read)
+        self.lower = lower_ind
+        self.diff = upper_ind - lower_ind
+        self.trackbar("Frames", "frames", 0, self.diff)(self.read)
 
     @staticmethod
     def read(gui, val) -> "FramesGUI":
@@ -509,7 +511,7 @@ class FramesGUI(BaseGUI):
 
         """
         if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
-            gui.frame = gui.frames[val]
+            gui.frame = gui.frames[int(val + gui.lower)]
             frame_proc = gui.process()
             cv2.imshow(gui.title, frame_proc)
 
@@ -568,7 +570,9 @@ class VideoGUI(BaseGUI):
         if not upper_ind:
             upper_ind = len(video)
 
-        self.trackbar("Frames", "frames", lower_ind, upper_ind)(self.read)
+        self.lower = lower_ind
+        self.diff = upper_ind - lower_ind
+        self.trackbar("Frames", "frames", 0, self.diff)(self.read)
 
     @staticmethod
     def read(gui, val) -> "VideoGUI":
@@ -587,7 +591,7 @@ class VideoGUI(BaseGUI):
 
         """
         if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
-            gui.frame = gui.video.read(val, grayscale=False)
+            gui.frame = gui.video.read(int(val + gui.lower), grayscale=False)
             frame_proc = gui.process()
             cv2.imshow(gui.title, frame_proc)
 
