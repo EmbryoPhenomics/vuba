@@ -635,9 +635,9 @@ def contour_mask(img, contours):
 def _contours_area(contours):
     """Convenience function for computing the area of contour(s). """
     if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
-        areas = cv2.contourArea(contours)
-    else:
         areas = [cv2.contourArea(c) for c in contours]
+    else:
+        areas = cv2.contourArea(contours)
     return areas
 
 
