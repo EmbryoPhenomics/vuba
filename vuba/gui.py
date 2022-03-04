@@ -288,13 +288,10 @@ class BaseGUI:
 
         def wrap_to_trackbar(func):
             if not func:
-
                 @functools.wraps(self._basic_trackbar_callback)
                 def on_exe(val):
                     return self._basic_trackbar_callback(self, id, val)
-
             else:
-
                 @functools.wraps(func)
                 def on_exe(val):
                     return func(self, val)
@@ -336,6 +333,7 @@ class BaseGUI:
         method after adjusting them in an interface for example.
 
         """
+
         # Execute first method to launch the gui
         firstfunc = self.trackbars[[*self.trackbars][0]]
         func = firstfunc.method
@@ -511,6 +509,7 @@ class FramesGUI(BaseGUI):
 
         """
         if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
+            gui["frames"] = val
             gui.frame = gui.frames[int(val + gui.lower)]
             frame_proc = gui.process()
             cv2.imshow(gui.title, frame_proc)
@@ -591,6 +590,7 @@ class VideoGUI(BaseGUI):
 
         """
         if val >= gui.trackbars["frames"].min and val < gui.trackbars["frames"].max:
+            gui["frames"] = val
             gui.frame = gui.video.read(int(val + gui.lower), grayscale=False)
             frame_proc = gui.process()
             cv2.imshow(gui.title, frame_proc)
