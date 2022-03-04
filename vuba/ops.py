@@ -187,7 +187,7 @@ def draw_rectangles(img, dims, *args, **kwargs):
         x,y,w,h = rect
         cv2.rectangle(img, (x, y), (x + w, y + h), *args, **kwargs)
 
-    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
+    if isinstance(dims, list) or isinstance(dims, np.ndarray) or isinstance(dims, tuple):
         for r in dims: _draw(r)
     else:
         _draw(dims)
