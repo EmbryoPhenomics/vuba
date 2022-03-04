@@ -72,7 +72,7 @@ def fit_circles(contours):
         An array or list corresponding to dimensions to circles fitted.
 
     """
-    if isinstance(contours, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         ret = [cv2.minEnclosingCircle(c) for c in contours]
     else:
         ret = cv2.minEnclosingCircle(contours)
@@ -96,7 +96,7 @@ def fit_rectangles(contours, rotate=False):
         An array or list corresponding to dimensions to bounding boxes fitted.
 
     """
-    if isinstance(contours, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         if rotate:
             ret = [cv2.minAreaRect(c) for c in contours]
         else:
@@ -124,7 +124,7 @@ def fit_ellipses(contours):
         An array or list corresponding to dimensions to ellipses fitted.
 
     """
-    if isinstance(contours, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         ret = [cv2.fitEllipse(c) for c in contours]
     else:
         ret = cv2.fitEllipse(contours)
@@ -153,7 +153,7 @@ def draw_contours(img, contours, *args, **kwargs):
     draw_ellipses
 
     """
-    if isinstance(contours, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         for c in contours:
             cv2.drawContours(img, [c], *args, **kwargs)
     else:
@@ -187,7 +187,7 @@ def draw_rectangles(img, dims, *args, **kwargs):
         x,y,w,h = rect
         cv2.rectangle(img, (x, y), (x + w, y + h), *args, **kwargs)
 
-    if isinstance(dims, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         for r in dims: _draw(r)
     else:
         _draw(dims)
@@ -220,7 +220,7 @@ def draw_circles(img, dims, *args, **kwargs):
         x,y,r = map(int, (x,y,r))
         cv2.circle(img, (x,y), r, *args, **kwargs)
 
-    if isinstance(dims, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         for c in dims: _draw(c)
     else:
         _draw(c)
@@ -250,7 +250,7 @@ def draw_ellipses(img, dims, *args, **kwargs):
 
     """
 
-    if isinstance(dims, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         for c in dims:
             cv2.ellipse(img, c, *args, **kwargs)
     else:
@@ -429,7 +429,7 @@ def cast_contours(contours, x, y):
     draw_contours
 
     """
-    if isinstance(contours, list):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         for i, c in enumerate(contours):
             c[:, 0, 0] += x
             c[:, 0, 1] += y
@@ -634,7 +634,7 @@ def contour_mask(img, contours):
 
 def _contours_area(contours):
     """Convenience function for computing the area of contour(s). """
-    if isinstance(contours, np.ndarray):
+    if isinstance(contours, list) or isinstance(contours, np.ndarray) or isinstance(contours, tuple):
         areas = cv2.contourArea(contours)
     else:
         areas = [cv2.contourArea(c) for c in contours]
